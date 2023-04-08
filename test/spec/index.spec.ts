@@ -1,7 +1,7 @@
 import 'jasmine';
 import * as index from '../../src';
 
-describe('{{project-name}}', () => {
+describe('riao-driver-mssql', () => {
 	it('exports a', () => {
 		expect(index.a).toBeTrue();
 	});
