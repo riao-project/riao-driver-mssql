@@ -1,3 +1,7 @@
-import { DataDefinitionBuilder } from 'riao-dbal/src';
+import { ColumnOptions, DataDefinitionBuilder } from 'riao-dbal/src';
 
-export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {}
+export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
+	public getAutoIncrement(): string {
+		return 'IDENTITY';
+	}
+}
