@@ -8,7 +8,6 @@ import {
 } from 'riao-dbal/src';
 import { MsSqlDataDefinitionBuilder } from './ddl-builder';
 import { MsSqlQueryBuilder } from './query-builder';
-import { num2str } from './param';
 
 export type MsSqlConnectionOptions = DatabaseConnectionOptions;
 
@@ -97,7 +96,7 @@ export class MsSqlDriver extends DatabaseDriver {
 		const paramMap = {};
 
 		for (const param of params) {
-			const id = 'p' + num2str(paramIndex);
+			const id = 'p' + paramIndex;
 
 			if (typeof param === 'number') {
 				query.input(id, mssql.Numeric);
