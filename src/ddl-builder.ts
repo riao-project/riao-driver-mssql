@@ -83,10 +83,19 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		}
 
 		for (const user of options.names) {
-			this.sql += `IF EXISTS (SELECT * FROM sys.server_principals WHERE name = N'${user}') `;
+			if (options.ifExists) {
+				this.sql += `IF EXISTS (SELECT * FROM sys.server_principals WHERE name = N'${user}') `;
+			}
+
 			this.sql += `DROP LOGIN ${user}; `;
+			this.sql += 'DROP USER ';
+
+			if (options.ifExists) {
+				this.sql += 'IF EXISTS ';
+				this.sql += user + '; ';
+			}
 		}
 
-		return super.dropUser(options);
+		return this;
 	}
 }
