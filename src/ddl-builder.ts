@@ -5,6 +5,7 @@ import {
 	DropUserOptions,
 	GrantOptions,
 } from 'riao-dbal/src';
+import { ChangeColumnOptions } from 'riao-dbal/src/ddl/alter-table';
 
 export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 	public getAutoIncrement(): string {
@@ -27,6 +28,19 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		}
 
 		return this;
+	}
+
+	public changeColumn(options: ChangeColumnOptions): this {
+		// Rename column first, if required
+		if (options.column !== options.options.name) {
+			this.sql +=
+				`EXEC sp_rename '${options.table}.${options.column}', ` +
+				`'${options.options.name}', 'COLUMN';`;
+		}
+
+		options.column = '';
+
+		return super.changeColumn(options);
 	}
 
 	public createUserPassword(password: string): this {
