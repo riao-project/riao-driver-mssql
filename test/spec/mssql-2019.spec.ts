@@ -9,7 +9,5 @@ test({
 	db: DatabaseMsSql2019,
 	expectedVersion: /^15\.0\.[0-9]+\.[0-9]+$/,
 	connectionOptions: connectionOptionsMsSql2019,
-	rootUsername: env.TEST_MSSQL2019_ROOT_USERNAME,
-	rootPassword: env.TEST_MSSQL2019_ROOT_PASSWORD,
 	rootDatabase: env.TEST_MSSQL2019_ROOT_DATABASE,
 });

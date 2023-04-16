@@ -8,20 +8,16 @@ export class Environment extends AppConfig {
 
 	readonly TEST_MSSQL2017_HOST = 'localhost';
 	readonly TEST_MSSQL2017_PORT = 1433;
-	readonly TEST_MSSQL2017_USERNAME = 'riaouser';
-	readonly TEST_MSSQL2017_PASSWORD = 'Riaopassword!234';
+	readonly TEST_MSSQL2017_USERNAME = 'SA';
+	readonly TEST_MSSQL2017_PASSWORD = 'Rootpassword!234';
 	readonly TEST_MSSQL2017_DATABASE = 'riaodb';
-	readonly TEST_MSSQL2017_ROOT_USERNAME = 'SA';
-	readonly TEST_MSSQL2017_ROOT_PASSWORD = 'Rootpassword!234';
 	readonly TEST_MSSQL2017_ROOT_DATABASE = '';
 
 	readonly TEST_MSSQL2019_HOST = 'localhost';
 	readonly TEST_MSSQL2019_PORT = 1434;
-	readonly TEST_MSSQL2019_USERNAME = 'riaouser';
-	readonly TEST_MSSQL2019_PASSWORD = 'Riaopassword!234';
+	readonly TEST_MSSQL2019_USERNAME = 'SA';
+	readonly TEST_MSSQL2019_PASSWORD = 'Rootpassword!234';
 	readonly TEST_MSSQL2019_DATABASE = 'riaodb';
-	readonly TEST_MSSQL2019_ROOT_USERNAME = 'SA';
-	readonly TEST_MSSQL2019_ROOT_PASSWORD = 'Rootpassword!234';
 	readonly TEST_MSSQL2019_ROOT_DATABASE = '';
 }
 
