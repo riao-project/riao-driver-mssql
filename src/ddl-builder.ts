@@ -59,6 +59,12 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		return this;
 	}
 
+	public grantOnDatabase(database: string): this {
+		this.sql += 'DATABASE::' + database;
+
+		return this;
+	}
+
 	public grant(options: GrantOptions): this {
 		if (!Array.isArray(options.privileges)) {
 			options.privileges = [options.privileges];
@@ -69,7 +75,9 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		}
 
 		if (options.privileges.includes('ALL') && options.on === '*') {
-			this.sql += `GRANT CONTROL SERVER TO ${options.to.join(', ')}; `;
+			this.sql += `USE master; GRANT CONTROL SERVER TO ${options.to.join(
+				', '
+			)}; `;
 
 			return this;
 		}
