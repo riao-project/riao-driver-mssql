@@ -34,14 +34,6 @@ export class MsSqlDriver extends DatabaseDriver {
 			},
 		});
 
-		// TODO: Add error handler
-		// IMPORTANT: Always attach an error listener to created
-		//	connection. Whenever something goes wrong with the
-		//	connection it will emit an error and if there is
-		//	no listener it will crash your application with
-		//	an uncaught error.
-		// https://www.npmjs.com/package/mssql
-
 		await this.conn.connect();
 
 		return this;
