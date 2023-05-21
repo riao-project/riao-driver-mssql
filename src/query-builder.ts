@@ -10,4 +10,14 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 
 		return this;
 	}
+
+	public selectTop(limit: number): this {
+		this.sql += 'TOP ' + limit + ' ';
+
+		return this;
+	}
+
+	public limit(nRecords: number): this {
+		return this;
+	}
 }
