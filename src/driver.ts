@@ -97,7 +97,7 @@ export class MsSqlDriver extends DatabaseDriver {
 				query.input(id, mssql.Numeric);
 			}
 			else if (typeof param === 'string') {
-				query.input(id, mssql.Text);
+				query.input(id, mssql.NVarChar);
 			}
 
 			paramMap[id] = param;
