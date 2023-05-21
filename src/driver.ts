@@ -52,9 +52,7 @@ export class MsSqlDriver extends DatabaseDriver {
 		try {
 			const rows = await this.preparedQuery({ sql, params });
 
-			return {
-				results: Array.isArray(rows) ? rows : [rows],
-			};
+			return { results: rows[0] };
 		}
 		catch (e) {
 			e.message += ' ' + JSON.stringify({ sql, params });
@@ -68,7 +66,7 @@ export class MsSqlDriver extends DatabaseDriver {
 		});
 
 		if (results && results.length && results[0]) {
-			const result = results[0][0];
+			const result = results[0];
 
 			const match = result[Object.keys(result)[0]].match(
 				/- ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/
