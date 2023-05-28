@@ -52,9 +52,17 @@ export class MsSqlDriver extends DatabaseDriver {
 		params = params ?? [];
 
 		try {
-			const rows = await this.preparedQuery({ sql, params });
+			let rows;
 
-			return { results: rows[0] };
+			if (params.length) {
+				rows = await this.preparedQuery({ sql, params });
+				rows = rows.length ? rows[0] : rows;
+			}
+			else {
+				rows = (await this.conn.query(sql)).recordset ?? [];
+			}
+
+			return { results: rows };
 		}
 		catch (e) {
 			e.message += ' ' + JSON.stringify({ sql, params });
