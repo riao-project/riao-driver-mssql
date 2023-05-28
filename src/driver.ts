@@ -64,13 +64,13 @@ export class MsSqlDriver extends DatabaseDriver {
 
 	public async getVersion(): Promise<string> {
 		const { results } = await this.query({
-			sql: 'SELECT @@version',
+			sql: 'SELECT @@version as version',
 		});
 
 		if (results && results.length && results[0]) {
 			const result = results[0];
 
-			const match = result[Object.keys(result)[0]].match(
+			const match = result.version.match(
 				/- ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/
 			);
 
