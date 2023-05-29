@@ -11,6 +11,12 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 		return this;
 	}
 
+	public insertOutput(primaryKey: string): this {
+		this.sql += `OUTPUT INSERTED.${primaryKey} AS ${primaryKey} `;
+
+		return this;
+	}
+
 	public selectTop(limit: number): this {
 		this.sql += 'TOP ' + limit + ' ';
 
