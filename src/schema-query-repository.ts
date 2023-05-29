@@ -1,21 +1,77 @@
-import { DatabaseRecord, SchemaQueryRepository } from 'riao-dbal/src';
+import {
+	DatabaseRecord,
+	SchemaQueryRepository,
+	SchemaTable,
+	columnName,
+} from 'riao-dbal/src';
 
 export class MsSqlSchemaQueryRepository extends SchemaQueryRepository {
+	protected tablesTable = 'sys.tables';
+	protected columnsTable = 'sys.columns';
+
 	protected databaseNameColumn = 'TABLE_CATALOG';
+	protected tableNameColumn = 'name';
+	protected tableTypeColumn = 'TYPE_DESC';
+	protected columnPositionColumn = 'column_id';
+
+	protected returnedTableTypes: Record<any, 'table' | 'view'> = {
+		USER_TABLE: 'table',
+		VIEW: 'view',
+	};
+
+	protected getTablesQueryWhere() {
+		return null;
+	}
 
 	public async getPrimaryKeyQuery(
 		table: string
 	): Promise<null | DatabaseRecord> {
 		const sql =
-			`SELECT ${this.columnNameColumn} ` +
-			'FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE ' +
-			'WHERE OBJECTPROPERTY(OBJECT_ID(CONSTRAINT_SCHEMA + \'.\' + QUOTENAME(CONSTRAINT_NAME)), \'IsPrimaryKey\') = 1 ' +
-			`AND ${this.databaseNameColumn} = @p1 AND ${this.tableNameColumn} = @p2`;
+			'SELECT ' +
+			`sys.identity_columns.name AS '${this.columnNameColumn}' ` +
+			'FROM sys.identity_columns ' +
+			'LEFT JOIN sys.tables ON ' +
+			'sys.identity_columns.object_id = sys.tables.object_id ' +
+			'WHERE sys.tables.name = @p1';
 
-		const params = [this.database, table];
+		const params = [table];
 
 		const results = (await this.driver.query({ sql, params })).results;
 
 		return results.length ? results[0] : null;
+	}
+
+	protected async getColumnsQuery(table: string): Promise<DatabaseRecord[]> {
+		return await this.find({
+			table: this.columnsTable,
+			columns: [
+				'sys.columns.name AS ' + this.columnNameColumn,
+				'sys.types.name AS ' + this.columnTypeColumn,
+			],
+			join: [
+				{
+					type: 'LEFT',
+					table: 'sys.types',
+					on: {
+						'sys.types.user_type_id': columnName(
+							'sys.columns.user_type_id'
+						),
+					},
+				},
+				{
+					type: 'LEFT',
+					table: 'sys.tables',
+					on: {
+						'sys.tables.object_id': columnName(
+							'sys.columns.object_id'
+						),
+					},
+				},
+			],
+			where: {
+				'sys.tables.name': table,
+			},
+			orderBy: { [this.columnPositionColumn]: 'ASC' },
+		});
 	}
 }
