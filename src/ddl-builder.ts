@@ -8,6 +8,15 @@ import {
 import { ChangeColumnOptions } from 'riao-dbal/src/ddl/alter-table';
 
 export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
+	public constructor() {
+		super();
+
+		this.columnTypes = <any>{
+			...this.columnTypes,
+			BOOL: 'BIT',
+		};
+	}
+
 	public getAutoIncrement(): string {
 		return 'IDENTITY';
 	}

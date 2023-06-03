@@ -102,7 +102,7 @@ export class MsSqlDriver extends DatabaseDriver {
 				query.input(id, mssql.Numeric);
 			}
 			else if (typeof param === 'boolean') {
-				query.input(id, mssql.Numeric);
+				query.input(id, mssql.Bit);
 			}
 			else if (typeof param === 'string') {
 				query.input(id, mssql.NVarChar);
