@@ -65,7 +65,11 @@ export class MsSqlDriver extends DatabaseDriver {
 			return { results: rows };
 		}
 		catch (e) {
-			e.message += ' ' + JSON.stringify({ sql, params });
+			e.message +=
+				' ' +
+				JSON.stringify({ sql, params }, (key, value) =>
+					typeof value === 'bigint' ? value.toString() : value
+				);
 			throw e;
 		}
 	}
@@ -95,7 +99,7 @@ export class MsSqlDriver extends DatabaseDriver {
 		let paramIndex = 1;
 		const paramMap = {};
 
-		for (const param of params) {
+		for (let param of params) {
 			const id = 'p' + paramIndex;
 
 			if (typeof param === 'number') {
@@ -106,6 +110,10 @@ export class MsSqlDriver extends DatabaseDriver {
 			}
 			else if (typeof param === 'string') {
 				query.input(id, mssql.NVarChar);
+			}
+			else if (typeof param === 'bigint') {
+				query.input(id, mssql.VarChar);
+				param = param.toString();
 			}
 
 			paramMap[id] = param;
