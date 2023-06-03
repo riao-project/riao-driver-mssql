@@ -103,7 +103,13 @@ export class MsSqlDriver extends DatabaseDriver {
 			const id = 'p' + paramIndex;
 
 			if (typeof param === 'number') {
-				query.input(id, mssql.Numeric);
+				if (('' + param).includes('.')) {
+					query.input(id, mssql.VarChar);
+					param = '' + param;
+				}
+				else {
+					query.input(id, mssql.Int);
+				}
 			}
 			else if (typeof param === 'boolean') {
 				query.input(id, mssql.Bit);

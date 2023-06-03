@@ -14,6 +14,7 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		this.columnTypes = <any>{
 			...this.columnTypes,
 			BOOL: 'BIT',
+			DOUBLE: 'REAL',
 		};
 	}
 
