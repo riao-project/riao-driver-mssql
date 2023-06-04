@@ -15,6 +15,7 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 			...this.columnTypes,
 			BOOL: 'BIT',
 			DOUBLE: 'REAL',
+			TEXT: 'VARCHAR(max)',
 		};
 	}
 
