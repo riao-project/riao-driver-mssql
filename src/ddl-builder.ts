@@ -16,6 +16,7 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 			BOOL: 'BIT',
 			DOUBLE: 'REAL',
 			TEXT: 'VARCHAR(max)',
+			BLOB: 'VARBINARY(max)',
 		};
 	}
 

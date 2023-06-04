@@ -125,6 +125,9 @@ export class MsSqlDriver extends DatabaseDriver {
 				query.input(id, mssql.VarChar);
 				param = param.toString();
 			}
+			else if (param instanceof Buffer) {
+				query.input(id, mssql.VarBinary);
+			}
 			else {
 				query.input(id, mssql.VarChar);
 			}
