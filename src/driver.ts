@@ -28,6 +28,7 @@ export class MsSqlDriver extends DatabaseDriver {
 			password: options.password,
 			options: {
 				trustServerCertificate: true,
+				useUTC: true,
 			},
 			pool: {
 				max: 10,
@@ -114,12 +115,18 @@ export class MsSqlDriver extends DatabaseDriver {
 			else if (typeof param === 'boolean') {
 				query.input(id, mssql.Bit);
 			}
+			else if (param instanceof Date) {
+				query.input(id, mssql.DateTime);
+			}
 			else if (typeof param === 'string') {
 				query.input(id, mssql.NVarChar);
 			}
 			else if (typeof param === 'bigint') {
 				query.input(id, mssql.VarChar);
 				param = param.toString();
+			}
+			else {
+				query.input(id, mssql.VarChar);
 			}
 
 			paramMap[id] = param;
