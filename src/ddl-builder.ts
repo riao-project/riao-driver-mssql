@@ -20,11 +20,13 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		};
 	}
 
-	public getAutoIncrement(): string {
-		return 'IDENTITY';
+	public columnAutoIncrement() {
+		this.sql += 'IDENTITY ';
+
+		return this;
 	}
 
-	public ifNotExists(): this {
+	public ifNotExists() {
 		return this;
 	}
 
