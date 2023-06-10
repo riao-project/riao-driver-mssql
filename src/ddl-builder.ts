@@ -30,6 +30,18 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		return this;
 	}
 
+	public columnDefaultFalse(): this {
+		this.sql += '0 ';
+
+		return this;
+	}
+
+	public columnDefaultTrue(): this {
+		this.sql += '1 ';
+
+		return this;
+	}
+
 	public createTable(options: CreateTableOptions): this {
 		if (options.ifNotExists) {
 			this.sql += `IF OBJECT_ID(N'${options.name}', N'U') IS NULL BEGIN `;
