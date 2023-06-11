@@ -14,6 +14,7 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		this.columnTypes = <any>{
 			...this.columnTypes,
 			BOOL: 'BIT',
+			TINYINT: 'SMALLINT', // mssql tinyint can't be signed
 			DOUBLE: 'REAL',
 			TEXT: 'VARCHAR(max)',
 			BLOB: 'VARBINARY(max)',
