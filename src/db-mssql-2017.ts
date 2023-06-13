@@ -1,8 +1,15 @@
 import { Database } from 'riao-dbal/src/database';
-import { MsSql2017Driver } from './driver-mssql-2017';
-import { DatabaseEnvMsSql2017 } from './env-mssql-2017';
+import { MsSqlDriver } from './driver';
+import { DatabaseEnvMsSql } from './env';
+import { MsSqlQueryBuilder } from './query-builder';
+import { MsSqlDataDefinitionBuilder } from './ddl-builder';
+import { MsSqlSchemaQueryRepository } from './schema-query-repository';
 
 export class DatabaseMsSql2017 extends Database {
-	driverType = MsSql2017Driver;
-	envType = DatabaseEnvMsSql2017;
+	driverType = MsSqlDriver;
+	envType = DatabaseEnvMsSql;
+
+	ddlBuilderType = MsSqlDataDefinitionBuilder;
+	queryBuilderType = MsSqlQueryBuilder;
+	schemaQueryRepositoryType = MsSqlSchemaQueryRepository;
 }

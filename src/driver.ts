@@ -6,17 +6,10 @@ import {
 	DatabaseQueryResult,
 	DatabaseQueryTypes,
 } from 'riao-dbal/src';
-import { MsSqlDataDefinitionBuilder } from './ddl-builder';
-import { MsSqlQueryBuilder } from './query-builder';
-import { MsSqlSchemaQueryRepository } from './schema-query-repository';
 
 export type MsSqlConnectionOptions = DatabaseConnectionOptions;
 
 export class MsSqlDriver extends DatabaseDriver {
-	dataDefinitionBulider = MsSqlDataDefinitionBuilder;
-	queryBuilder = MsSqlQueryBuilder;
-	schemaQueryRepository = MsSqlSchemaQueryRepository;
-
 	protected conn: mssql.ConnectionPool;
 
 	public async connect(options: MsSqlConnectionOptions): Promise<this> {
