@@ -18,7 +18,7 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 			DOUBLE: 'REAL',
 			TEXT: 'VARCHAR(max)',
 			BLOB: 'VARBINARY(max)',
-			DATETIME: 'DATETIME2',
+			TIMESTAMP: 'DATETIME2',
 		};
 	}
 
