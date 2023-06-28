@@ -4,8 +4,8 @@ import {
 	DataDefinitionBuilder,
 	DropUserOptions,
 	GrantOptions,
-} from 'riao-dbal/src';
-import { ChangeColumnOptions } from 'riao-dbal/src/ddl/alter-table';
+} from '@riao/dbal';
+import { ChangeColumnOptions } from '@riao/dbal/ddl/alter-table';
 
 export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 	public constructor() {

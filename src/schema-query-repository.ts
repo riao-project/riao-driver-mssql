@@ -3,7 +3,7 @@ import {
 	SchemaQueryRepository,
 	SchemaTable,
 	columnName,
-} from 'riao-dbal/src';
+} from '@riao/dbal';
 
 export class MsSqlSchemaQueryRepository extends SchemaQueryRepository {
 	protected tablesTable = 'sys.tables';

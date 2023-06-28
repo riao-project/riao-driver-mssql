@@ -1,4 +1,4 @@
-import { Database } from 'riao-dbal/src/database';
+import { Database } from '@riao/dbal/database';
 import { MsSqlDriver } from './driver';
 import { DatabaseEnvMsSql } from './env';
 import { MsSqlQueryBuilder } from './query-builder';

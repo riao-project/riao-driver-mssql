@@ -1,7 +1,7 @@
 import 'jasmine';
 import { DatabaseMsSql2017 } from '../../src';
 import { connectionOptionsMsSql2017 } from '../connection-options';
-import { test } from 'riao-driver-test/src';
+import { test } from '@riao/driver-test';
 import { env } from '../env';
 
 test({

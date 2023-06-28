@@ -1,4 +1,4 @@
-import { DatabaseQueryBuilder } from 'riao-dbal/src';
+import { DatabaseQueryBuilder } from '@riao/dbal';
 
 export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 	protected placeHolderId = 1;

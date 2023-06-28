@@ -1,7 +1,7 @@
 import 'jasmine';
 import { DatabaseMsSql2019 } from '../../src';
 import { connectionOptionsMsSql2019 } from '../connection-options';
-import { test } from 'riao-driver-test/src';
+import { test } from '@riao/driver-test';
 import { env } from '../env';
 
 test({
