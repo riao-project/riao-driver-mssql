@@ -6,11 +6,12 @@ import {
 	DatabaseQueryResult,
 	DatabaseQueryTypes,
 } from '@riao/dbal';
+import { Transaction } from '@riao/dbal/database/transaction';
 
 export type MsSqlConnectionOptions = DatabaseConnectionOptions;
 
 export class MsSqlDriver extends DatabaseDriver {
-	protected conn: mssql.ConnectionPool;
+	public conn: mssql.ConnectionPool;
 
 	public async connect(options: MsSqlConnectionOptions): Promise<this> {
 		this.conn = new mssql.ConnectionPool({
@@ -134,5 +135,32 @@ export class MsSqlDriver extends DatabaseDriver {
 		await query.unprepare();
 
 		return result.recordsets;
+	}
+
+	public async transaction<T>(
+		fn: (transaction: Transaction) => Promise<T>,
+		transaction: Transaction
+	): Promise<T> {
+		const mssqlTransaction = await new mssql.Transaction(this.conn);
+		let result: T;
+
+		await mssqlTransaction.begin();
+
+		transaction.driver.conn = mssqlTransaction;
+
+		transaction.ddl.setDriver(transaction.driver);
+		transaction.query.setDriver(transaction.driver);
+
+		try {
+			result = await fn(transaction);
+			await mssqlTransaction.commit();
+		}
+		catch (e) {
+			await mssqlTransaction.rollback();
+
+			throw e;
+		}
+
+		return result;
 	}
 }
