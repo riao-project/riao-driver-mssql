@@ -20,6 +20,9 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 			BLOB: 'VARBINARY(max)',
 			TIMESTAMP: 'DATETIME2',
 		};
+
+		this.operators.openEnclosure = '[';
+		this.operators.closeEnclosure = ']';
 	}
 
 	public columnAutoIncrement() {
