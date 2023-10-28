@@ -3,6 +3,13 @@ import { DatabaseQueryBuilder } from '@riao/dbal';
 export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 	protected placeHolderId = 1;
 
+	public constructor() {
+		super();
+
+		this.operators.openEnclosure = '[';
+		this.operators.closeEnclosure = ']';
+	}
+
 	public appendPlaceholder(): this {
 		// mssql uses incrementing placeholders in the format @p1, @p2, ...
 		this.sql += `@p${this.placeHolderId} `;
@@ -12,7 +19,7 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 	}
 
 	public insertOutput(primaryKey: string): this {
-		this.sql += `OUTPUT INSERTED.${primaryKey} AS ${primaryKey} `;
+		this.sql += `OUTPUT INSERTED.[${primaryKey}] AS [${primaryKey}] `;
 
 		return this;
 	}

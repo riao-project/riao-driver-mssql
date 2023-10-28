@@ -45,8 +45,8 @@ export class MsSqlSchemaQueryRepository extends SchemaQueryRepository {
 		return await this.find({
 			table: this.columnsTable,
 			columns: [
-				'sys.columns.name AS ' + this.columnNameColumn,
-				'sys.types.name AS ' + this.columnTypeColumn,
+				{ column: 'sys.columns.name', as: this.columnNameColumn },
+				{ column: 'sys.types.name', as: this.columnTypeColumn },
 			],
 			join: [
 				{
