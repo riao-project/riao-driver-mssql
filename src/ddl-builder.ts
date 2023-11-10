@@ -6,6 +6,7 @@ import {
 	GrantOptions,
 } from '@riao/dbal';
 import { ChangeColumnOptions } from '@riao/dbal/ddl/alter-table';
+import { MsSqlBuilder } from './sql-builder';
 
 export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 	public constructor() {
@@ -20,13 +21,14 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 			BLOB: 'VARBINARY(max)',
 			TIMESTAMP: 'DATETIME2',
 		};
+	}
 
-		this.operators.openEnclosure = '[';
-		this.operators.closeEnclosure = ']';
+	public getSqlType() {
+		return MsSqlBuilder;
 	}
 
 	public columnAutoIncrement() {
-		this.sql += 'IDENTITY ';
+		this.sql.append('IDENTITY ');
 
 		return this;
 	}
@@ -36,26 +38,28 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 	}
 
 	public columnDefaultFalse(): this {
-		this.sql += '0 ';
+		this.sql.append('0 ');
 
 		return this;
 	}
 
 	public columnDefaultTrue(): this {
-		this.sql += '1 ';
+		this.sql.append('1 ');
 
 		return this;
 	}
 
 	public createTable(options: CreateTableOptions): this {
 		if (options.ifNotExists) {
-			this.sql += `IF OBJECT_ID(N'${options.name}', N'U') IS NULL BEGIN `;
+			this.sql.append(
+				`IF OBJECT_ID(N'${options.name}', N'U') IS NULL BEGIN `
+			);
 		}
 
 		super.createTable(options);
 
 		if (options.ifNotExists) {
-			this.sql += ' END';
+			this.sql.append(' END');
 		}
 
 		return this;
@@ -64,9 +68,10 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 	public changeColumn(options: ChangeColumnOptions): this {
 		// Rename column first, if required
 		if (options.column !== options.options.name) {
-			this.sql +=
+			this.sql.append(
 				`EXEC sp_rename '${options.table}.${options.column}', ` +
-				`'${options.options.name}', 'COLUMN';`;
+					`'${options.options.name}', 'COLUMN';`
+			);
 		}
 
 		options.column = '';
@@ -75,23 +80,25 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 	}
 
 	public createUserPassword(password: string): this {
-		this.sql += `WITH PASSWORD = '${password}' `;
+		this.sql.append(`WITH PASSWORD = '${password}' `);
 
 		return this;
 	}
 
 	public createUser(options: CreateUserOptions): this {
-		this.sql += `CREATE LOGIN ${options.name} `;
+		this.sql.append(`CREATE LOGIN ${options.name} `);
 		this.createUserPassword(options.password);
-		this.sql += '; ';
+		this.sql.append('; ');
 
-		this.sql += `CREATE USER ${options.name} FOR LOGIN ${options.name};`;
+		this.sql.append(
+			`CREATE USER ${options.name} FOR LOGIN ${options.name};`
+		);
 
 		return this;
 	}
 
 	public grantOnDatabase(database: string): this {
-		this.sql += 'DATABASE::' + database;
+		this.sql.append('DATABASE::' + database);
 
 		return this;
 	}
@@ -106,9 +113,9 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		}
 
 		if (options.privileges.includes('ALL') && options.on === '*') {
-			this.sql += `USE master; GRANT CONTROL SERVER TO ${options.to.join(
-				', '
-			)}; `;
+			this.sql.append(
+				`USE master; GRANT CONTROL SERVER TO ${options.to.join(', ')}; `
+			);
 
 			return this;
 		}
@@ -123,15 +130,17 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 
 		for (const user of options.names) {
 			if (options.ifExists) {
-				this.sql += `IF EXISTS (SELECT * FROM sys.server_principals WHERE name = N'${user}') `;
+				this.sql.append(
+					`IF EXISTS (SELECT * FROM sys.server_principals WHERE name = N'${user}') `
+				);
 			}
 
-			this.sql += `DROP LOGIN ${user}; `;
-			this.sql += 'DROP USER ';
+			this.sql.append(`DROP LOGIN ${user}; `);
+			this.sql.append('DROP USER ');
 
 			if (options.ifExists) {
-				this.sql += 'IF EXISTS ';
-				this.sql += user + '; ';
+				this.sql.append('IF EXISTS ');
+				this.sql.append(user + '; ');
 			}
 		}
 

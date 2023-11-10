@@ -4,6 +4,7 @@ import {
 	SchemaTable,
 	columnName,
 } from '@riao/dbal';
+import { MsSqlBuilder } from './sql-builder';
 
 export class MsSqlSchemaQueryRepository extends SchemaQueryRepository {
 	protected tablesTable = 'sys.tables';
@@ -18,6 +19,10 @@ export class MsSqlSchemaQueryRepository extends SchemaQueryRepository {
 		USER_TABLE: 'table',
 		VIEW: 'view',
 	};
+
+	public getSqlType() {
+		return MsSqlBuilder;
+	}
 
 	protected getTablesQueryWhere() {
 		return null;
