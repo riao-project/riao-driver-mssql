@@ -1,6 +1,6 @@
 {
 	"name": "@riao/mssql",
-	"version": "1.1.2",
+	"version": "2.0.0",
 	"description": "riao driver for microsoft sql server",
 	"private": "true",
 	"typescript-template": {
@@ -24,6 +24,9 @@
 	"dependencies": {
 		"@riao/dbal": "^2.0.0",
 		"mssql": "^9.1.1"
+	},
+	"peerDependencies": {
+		"@riao/dbal": "^2.0.0"
 	},
 	"devDependencies": {
 		"@istanbuljs/nyc-config-typescript": "^1.0.2",
