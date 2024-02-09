@@ -21,4 +21,10 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 	public limit(nRecords: number): this {
 		return this;
 	}
+
+	public uuid(): this {
+		this.sql.append('NEWID()');
+
+		return this;
+	}
 }
