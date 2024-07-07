@@ -2,18 +2,23 @@ import {
 	CreateTableOptions,
 	CreateUserOptions,
 	DataDefinitionBuilder,
+	DatabaseQueryBuilder,
 	DropUserOptions,
 	GrantOptions,
 } from '@riao/dbal';
 import { ChangeColumnOptions } from '@riao/dbal/ddl/alter-table';
 import { MsSqlBuilder } from './sql-builder';
+import { MsSqlQueryBuilder } from './query-builder';
 
 export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
+	protected queryBuilderType = MsSqlQueryBuilder;
+
 	public constructor() {
 		super();
 
 		this.columnTypes = <any>{
 			...this.columnTypes,
+			UUID: 'uniqueidentifier',
 			BOOL: 'BIT',
 			TINYINT: 'SMALLINT', // mssql tinyint can't be signed
 			DOUBLE: 'REAL',

@@ -58,4 +58,10 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 
 		return this;
 	}
+
+	public uuid(): this {
+		this.sql.append('NEWID()');
+
+		return this;
+	}
 }
