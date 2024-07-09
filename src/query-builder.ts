@@ -1,5 +1,11 @@
-import { DatabaseQueryBuilder, DatabaseRecord, SelectQuery } from '@riao/dbal';
+import {
+	DatabaseFunctions,
+	DatabaseQueryBuilder,
+	DatabaseRecord,
+	SelectQuery,
+} from '@riao/dbal';
 import { MsSqlBuilder } from './sql-builder';
+import { DatabaseFunction } from '@riao/dbal/functions/function-token';
 
 export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 	public getSqlType() {
@@ -61,6 +67,21 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 
 	public uuid(): this {
 		this.sql.append('NEWID()');
+
+		return this;
+	}
+
+	public override date(fn: DatabaseFunction): this {
+		this.sql.append('CONVERT(date, ');
+
+		if (fn.params?.expr) {
+			this.expression(fn.params.expr);
+		}
+		else {
+			this.expression(DatabaseFunctions.currentTimestamp());
+		}
+
+		this.sql.closeParens();
 
 		return this;
 	}
