@@ -11,7 +11,7 @@ import { Transaction } from '@riao/dbal/database/transaction';
 export type MsSqlConnectionOptions = DatabaseConnectionOptions;
 
 export class MsSqlDriver extends DatabaseDriver {
-	public conn: mssql.ConnectionPool;
+	public override conn: mssql.ConnectionPool = undefined;
 
 	public async connect(options: MsSqlConnectionOptions): Promise<this> {
 		this.conn = new mssql.ConnectionPool({
