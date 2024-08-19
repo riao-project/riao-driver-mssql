@@ -130,9 +130,17 @@ export class MsSqlDriver extends DatabaseDriver {
 			paramIndex++;
 		}
 
-		await query.prepare(sql);
-		const result = await query.execute(paramMap);
-		await query.unprepare();
+		let result;
+
+		try {
+			await query.prepare(sql);
+			result = await query.execute(paramMap);
+			await query.unprepare();
+		}
+		catch (e) {
+			await query.unprepare();
+			throw e;
+		}
 
 		return result.recordsets;
 	}
