@@ -32,6 +32,22 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 		return MsSqlBuilder;
 	}
 
+	public disableForeignKeyChecks(): this {
+		this.sql.append(
+			'EXEC sp_MSforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT all"'
+		);
+
+		return this;
+	}
+
+	public enableForeignKeyChecks(): this {
+		this.sql.append(
+			'exec sp_MSforeachtable @command1="print \'?\'", @command2="ALTER TABLE ? WITH NOCHECK CHECK CONSTRAINT all"'
+		);
+
+		return this;
+	}
+
 	public columnAutoIncrement() {
 		this.sql.append('IDENTITY ');
 
