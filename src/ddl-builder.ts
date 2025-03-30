@@ -5,6 +5,7 @@ import {
 	DatabaseQueryBuilder,
 	DropUserOptions,
 	GrantOptions,
+	TriggerOptions,
 } from '@riao/dbal';
 import { ChangeColumnOptions } from '@riao/dbal/ddl/alter-table';
 import { MsSqlBuilder } from './sql-builder';
@@ -164,6 +165,36 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 				this.sql.append(user + '; ');
 			}
 		}
+
+		return this;
+	}
+
+	public override createTriggerTableEvent(options: TriggerOptions): this {
+		this.createTriggerTable(options.table);
+		this.createTriggerEvent(options);
+
+		return this;
+	}
+
+	public override createTriggerEvent(options: TriggerOptions): this {
+		if (options.timing === 'BEFORE') {
+			this.sql.append('AFTER ');
+		}
+		else {
+			this.sql.append(options.timing + ' ');
+		}
+
+		this.sql.append(options.event + ' ');
+
+		return this;
+	}
+
+	public override createTriggerForEachRow(): this {
+		return this;
+	}
+
+	public override createTriggerBeginStatement(): this {
+		this.sql.append('AS BEGIN ');
 
 		return this;
 	}

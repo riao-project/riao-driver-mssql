@@ -1,7 +1,9 @@
 import {
+	columnName,
 	DatabaseFunctions,
 	DatabaseQueryBuilder,
 	DatabaseRecord,
+	Expression,
 	SelectQuery,
 } from '@riao/dbal';
 import { MsSqlBuilder } from './sql-builder';
@@ -84,5 +86,29 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 		this.sql.closeParens();
 
 		return this;
+	}
+
+	public override getTriggerOld(): string {
+		return 'DELETED';
+	}
+
+	public override getTriggerNew(): string {
+		return 'INSERTED';
+	}
+
+	public override triggerSetValue(options: {
+		table: string;
+		idColumn: string;
+		column: string;
+		value: Expression;
+	}): this {
+		const key = options.idColumn;
+
+		return this.update({
+			table: options.table,
+			set: { [options.column]: options.value },
+			from: { NEW: this.getTriggerNew() },
+			where: { [`${options.table}.${key}`]: columnName('NEW.' + key) },
+		});
 	}
 }
