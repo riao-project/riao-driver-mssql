@@ -43,30 +43,37 @@ export class MsSqlDriver extends DatabaseDriver {
 	public async query(
 		options: DatabaseQueryTypes
 	): Promise<DatabaseQueryResult> {
-		let { sql, params } = this.toDatabaseQueryOptions(options);
-		params = params ?? [];
+		const queries = this.toDatabaseQueryOptions(options);
+		let result;
 
-		try {
-			let rows;
+		for (const query of queries) {
+			let { sql, params } = query;
+			params = params ?? [];
 
-			if (params.length) {
-				rows = await this.preparedQuery({ sql, params });
-				rows = rows.length ? rows[0] : rows;
+			try {
+				let rows;
+
+				if (params.length) {
+					rows = await this.preparedQuery({ sql, params });
+					rows = rows.length ? rows[0] : rows;
+				}
+				else {
+					rows = (await this.conn.query(sql)).recordset ?? [];
+				}
+
+				result = { results: rows };
 			}
-			else {
-				rows = (await this.conn.query(sql)).recordset ?? [];
+			catch (e) {
+				e.message +=
+					' ' +
+					JSON.stringify({ sql, params }, (key, value) =>
+						typeof value === 'bigint' ? value.toString() : value
+					);
+				throw e;
 			}
+		}
 
-			return { results: rows };
-		}
-		catch (e) {
-			e.message +=
-				' ' +
-				JSON.stringify({ sql, params }, (key, value) =>
-					typeof value === 'bigint' ? value.toString() : value
-				);
-			throw e;
-		}
+		return result;
 	}
 
 	public async getVersion(): Promise<string> {
