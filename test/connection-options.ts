@@ -16,3 +16,11 @@ export const connectionOptionsMsSql2019: MsSqlConnectionOptions = {
 	username: env.TEST_MSSQL2019_USERNAME,
 	password: env.TEST_MSSQL2019_PASSWORD,
 };
+
+export const connectionOptionsMsSql2022: MsSqlConnectionOptions = {
+	host: env.TEST_MSSQL2022_HOST,
+	port: env.TEST_MSSQL2022_PORT,
+	database: env.TEST_MSSQL2022_DATABASE,
+	username: env.TEST_MSSQL2022_USERNAME,
+	password: env.TEST_MSSQL2022_PASSWORD,
+};
