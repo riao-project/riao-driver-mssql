@@ -1,6 +1,6 @@
 {
 	"name": "@riao/mssql",
-	"version": "3.4.0",
+	"version": "3.5.0",
 	"description": "riao driver for microsoft sql server",
 	"private": "true",
 	"typescript-template": {
