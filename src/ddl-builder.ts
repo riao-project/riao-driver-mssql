@@ -23,7 +23,7 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 			BOOL: 'BIT',
 			TINYINT: 'SMALLINT', // mssql tinyint can't be signed
 			DOUBLE: 'REAL',
-			TEXT: 'VARCHAR(max)',
+			TEXT: 'VARCHAR(max)', // TODO: nvarchar instead?
 			BLOB: 'VARBINARY(max)',
 			TIMESTAMP: 'DATETIME2',
 		};
