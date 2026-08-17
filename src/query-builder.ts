@@ -15,7 +15,7 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 	}
 
 	public select(query: SelectQuery<DatabaseRecord>): this {
-		if (query.limit && !query.offset) {
+		if (query.limit && query.offset == null) {
 			query['top'] = query.limit;
 			delete query.limit;
 		}
