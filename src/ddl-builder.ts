@@ -26,6 +26,7 @@ export class MsSqlDataDefinitionBuilder extends DataDefinitionBuilder {
 			TEXT: 'VARCHAR(max)', // TODO: nvarchar instead?
 			BLOB: 'VARBINARY(max)',
 			TIMESTAMP: 'DATETIME2',
+			JSON: 'NVARCHAR(max)',
 		};
 	}
 

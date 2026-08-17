@@ -54,11 +54,36 @@ export class MsSqlDriver extends DatabaseDriver {
 				let rows;
 
 				if (params.length) {
-					rows = await this.preparedQuery({ sql, params });
-					rows = rows.length ? rows[0] : rows;
+					const queryResult = await this.preparedQuery({ sql, params });
+					rows = queryResult.length ? queryResult[0] : queryResult;
+					if (queryResult.length) console.log('prepare columns', queryResult.columns || queryResult[0].columns);
 				}
 				else {
-					rows = (await this.conn.query(sql)).recordset ?? [];
+					const queryResult = await this.conn.query(sql);
+					rows = queryResult.recordset ?? [];
+					console.log('query columns', queryResult.recordset?.columns);
+				}
+
+				if (Array.isArray(rows) && rows.length > 0) {
+					for (const row of rows) {
+						for (const key in row) {
+							if (typeof row[key] === 'string') {
+								try {
+									const parsed = JSON.parse(row[key]);
+									if (typeof parsed === 'object' && parsed !== null) {
+										row[key] = parsed;
+									}
+									else if (Array.isArray(parsed)) {
+										row[key] = parsed;
+									}
+									else if (parsed === true || parsed === false || typeof parsed === 'number') {
+										// in riao-driver tests, if we do JSON parse it might incorrectly parse valid strings?
+										// e.g. "true" parsed as boolean true, or "123" parsed as number 123.
+									}
+								} catch (e) {}
+							}
+						}
+					}
 				}
 
 				result = { results: rows };
@@ -129,6 +154,10 @@ export class MsSqlDriver extends DatabaseDriver {
 			else if (param instanceof Buffer) {
 				query.input(id, mssql.VarBinary);
 			}
+			else if (typeof param === 'object' && param !== null) {
+				query.input(id, mssql.NVarChar);
+				param = JSON.stringify(param);
+			}
 			else {
 				query.input(id, mssql.VarChar);
 			}
@@ -149,6 +178,7 @@ export class MsSqlDriver extends DatabaseDriver {
 			throw e;
 		}
 
+		console.log('execute result', !!result.recordset, result.recordset?.columns);
 		return result.recordsets;
 	}
 
