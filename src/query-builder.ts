@@ -88,6 +88,21 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 		return this;
 	}
 
+	public override day(fn: DatabaseFunction): this {
+		this.sql.append('DATEPART(day, ');
+
+		if (fn.params?.expr) {
+			this.expression(fn.params.expr);
+		}
+		else {
+			this.expression(DatabaseFunctions.currentTimestamp());
+		}
+
+		this.sql.closeParens();
+
+		return this;
+	}
+
 	public override getTriggerOld(): string {
 		return 'DELETED';
 	}
