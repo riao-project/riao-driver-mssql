@@ -118,6 +118,22 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 		return this;
 	}
 
+	public override round(fn: DatabaseFunction): this {
+		this.sql.append('ROUND');
+		this.sql.openParens();
+
+		this.expression(fn.params.expr);
+
+		// MSSQL requires 2-3 arguments for ROUND
+		this.sql.trimEnd();
+		this.sql.append(', ');
+		this.sql.append(fn.params.decimals ?? 0);
+
+		this.sql.closeParens();
+
+		return this;
+	}
+
 	public override getTriggerOld(): string {
 		return 'DELETED';
 	}
