@@ -157,4 +157,35 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 			where: { [`${options.table}.${key}`]: columnName('NEW.' + key) },
 		});
 	}
+
+	public override concat(fn: DatabaseFunction): this {
+		const expr = fn.params?.expr ?? [];
+
+		// MSSQL CONCAT requires at least 2 arguments
+		// For single argument, concatenate with empty string
+		if (expr.length === 1) {
+			this.sql.append('CONCAT');
+			this.sql.openParens();
+			this.expression(expr[0]);
+			this.sql.append(', ');
+			this.sql.append("''");
+			this.sql.closeParens();
+		}
+		else {
+			this.sql.append('CONCAT');
+			this.sql.openParens();
+
+			for (let i = 0; i < expr.length; i++) {
+				this.expression(expr[i]);
+
+				if (i < expr.length - 1) {
+					this.sql.append(', ');
+				}
+			}
+
+			this.sql.closeParens();
+		}
+
+		return this;
+	}
 }
