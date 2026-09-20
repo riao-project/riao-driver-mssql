@@ -14,9 +14,9 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 		return MsSqlBuilder;
 	}
 
-	// MSSQL doesn't support wrapping outer SELECT in parentheses for INTERSECT
-	// with prepared statements, so we disable it here
-	protected shouldWrapIntersectQuery(): boolean {
+	// MSSQL doesn't support wrapping compound SELECT operands in parentheses
+	// with prepared statements, so we disable it here.
+	protected shouldWrapIntersectExceptQuery(): boolean {
 		return false;
 	}
 
@@ -26,7 +26,17 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 	public intersectWithSubquery(query: SelectQuery, all = false): this {
 		this.sql.trimEnd(' ');
 		this.sql.append(all ? ' INTERSECT ALL ' : ' INTERSECT ');
-		// Inline the query without Subquery wrapping (no parentheses)
+		// Inline the query without Subquery wrapping.
+		this.select(query);
+		this.sql.space();
+
+		return this;
+	}
+
+	public exceptWithSubquery(query: SelectQuery, all = false): this {
+		this.sql.trimEnd(' ');
+		this.sql.append(all ? ' EXCEPT ALL ' : ' EXCEPT ');
+		// Inline the query without Subquery wrapping.
 		this.select(query);
 		this.sql.space();
 

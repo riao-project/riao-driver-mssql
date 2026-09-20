@@ -3,6 +3,32 @@ import { MsSqlQueryBuilder } from '../src/query-builder';
 
 describe('MsSqlQueryBuilder', () => {
 	describe('select', () => {
+		it('uses unparenthesized EXCEPT operands', () => {
+			const builder = new MsSqlQueryBuilder();
+			builder
+				.select({ table: 'users' })
+				.except({ table: 'employees' });
+			const { sql } = builder.toDatabaseQuery();
+
+			expect(sql).toEqual(
+				'SELECT * FROM [users] EXCEPT SELECT * FROM [employees]'
+			);
+		});
+
+		it('keeps the right-side EXCEPT WHERE clause unparenthesized', () => {
+			const builder = new MsSqlQueryBuilder();
+			builder
+				.select({ table: 'users' })
+				.except({ table: 'employees', where: { active: true } });
+			const { sql, params } = builder.toDatabaseQuery();
+
+			expect(sql).toEqual(
+				'SELECT * FROM [users] EXCEPT SELECT * FROM [employees] ' +
+					'WHERE ([active] = @p1)'
+			);
+			expect(params).toEqual([true]);
+		});
+
 		it('uses TOP when limit is set without offset', () => {
 			const builder = new MsSqlQueryBuilder();
 			builder.select({ columns: ['*'], table: 'users', limit: 10 });
