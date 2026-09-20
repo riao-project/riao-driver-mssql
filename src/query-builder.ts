@@ -14,6 +14,25 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 		return MsSqlBuilder;
 	}
 
+	// MSSQL doesn't support wrapping outer SELECT in parentheses for INTERSECT
+	// with prepared statements, so we disable it here
+	protected shouldWrapIntersectQuery(): boolean {
+		return false;
+	}
+
+	// MSSQL's prepared statement handler also rejects parentheses around
+	// inner SELECT statements with WHERE clauses. Override to inline the
+	// inner query without wrapping.
+	public intersectWithSubquery(query: SelectQuery, all = false): this {
+		this.sql.trimEnd(' ');
+		this.sql.append(all ? ' INTERSECT ALL ' : ' INTERSECT ');
+		// Inline the query without Subquery wrapping (no parentheses)
+		this.select(query);
+		this.sql.space();
+
+		return this;
+	}
+
 	public select(query: SelectQuery<DatabaseRecord>): this {
 		if (query.limit && query.offset == null) {
 			query['top'] = query.limit;
@@ -41,6 +60,7 @@ export class MsSqlQueryBuilder extends DatabaseQueryBuilder {
 				throw new Error('Cannot offset without order by!');
 			}
 
+			// TODO: Fix: ! and ===
 			if (!query.limit === undefined) {
 				throw new Error('Cannot offset without limit!');
 			}
